@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/main/java/xupt/se/ttms/controller/CusServlet.java=UTF-8
 encoding//src/main/java/xupt/se/ttms/controller/StudioServlet.java=UTF-8
 encoding//src/main/java/xupt/se/ttms/dao/StudioDAO.java=UTF-8
 encoding//src/main/java/xupt/se/ttms/filter/Filter1Cors.java=UTF-8
