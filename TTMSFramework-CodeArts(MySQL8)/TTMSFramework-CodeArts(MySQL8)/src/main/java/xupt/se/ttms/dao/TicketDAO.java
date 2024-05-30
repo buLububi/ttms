@@ -1,9 +1,6 @@
 package xupt.se.ttms.dao;
 
 import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +20,7 @@ public class TicketDAO implements iTicketDAO
         {
         
         	String sql="insert into ticket(seat_id, sched_id, ticket_price, ticket_status ,ticket_locktime)"
-                            + " values('" + stu.getSeat_id() + ", " + stu.getSched_id() + ", " + stu.getTicket_price() + ", "
+                            + " values(" + stu.getSeat_id() + ", " + stu.getSched_id() + ", " + stu.getTicket_price() + ", "
                             + stu.getTicket_status() + ",'"+stu.getTicket_locktime()+"' )";
         
         	DBUtil db=new DBUtil();
@@ -58,7 +55,7 @@ public class TicketDAO implements iTicketDAO
         {
             String sql="update ticket set" + " seat_id =" + stu.getSeat_id() + ", " + " sched_id = "
                     + stu.getSched_id() + ", " + " ticket_price = " + stu.getTicket_price() + ", "
-                    + " ticket_status = " + stu.getTicket_status() + ", "+"ticket_locktime="+stu.getTicket_locktime();
+                    + " ticket_status = " + stu.getTicket_status() + ", "+"ticket_locktime='"+stu.getTicket_locktime()+"'";
             sql+=" where ticket_id = " + stu.getTicket_id();
             DBUtil db=new DBUtil();
             db.openConnection();
@@ -198,7 +195,7 @@ public class TicketDAO implements iTicketDAO
                     stu.setSched_id(rst.getInt("sched_id"));
                     stu.setTicket_price(rst.getDouble("ticket_price"));
                     stu.setTicket_status(rst.getInt("ticket_status"));
-                    stu.setTicket_locktime(rst.getTimestamp("ticket_locktime"));
+                    stu.setTicket_locktime(rst.getString("ticket_locktime"));
                     
                     stuList.add(stu);
                 }

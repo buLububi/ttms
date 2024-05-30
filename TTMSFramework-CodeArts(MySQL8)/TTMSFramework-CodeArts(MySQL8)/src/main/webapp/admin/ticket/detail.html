@@ -134,12 +134,12 @@
 
 	function check() {
 		var form = document.getElementById("myform");
-		if(form.sched_id.value=="" ) {
+		if(form.sched_id.value==""|| form.seat_id.value==""||form.ticket_price.value==""||form.ticket_status.value==""||form.ticket_locktime.value=="") {
 			alert("请填写完整信息");
 			return;
 		}
-		if(isNaN(form.sched_id.value) ){
-			alert("演出厅不能为空");
+		if(isNaN(form.sched_id.value)||isNaN(form.seat_id.value)||isNaN(form.ticket_price.value)||isNaN(form.ticket_status.value)){
+			alert("座位，演出厅，演出厅票价，票状态不是数字");
 			return;
 		}
 		var url = "../../TicketServlet";
@@ -154,10 +154,10 @@
 			req.onreadystatechange = checkComplete;
 			var data = "type=" +form.type.value+
             "&ticket_id=" + form.ticket_id.value +
+            "&seat_id=" + form.seat_id.value+
             "&sched_id=" + form.sched_id.value +
-            "&seat_id=" + form.seat_id.value)+
-            "&ticket_price=" + encodeURIComponent(form.ticket_price.value) +
-            "&ticket_status=" + encodeURIComponent(form.ticket_status.value) +
+            "&ticket_price=" + form.ticket_price.value +
+            "&ticket_status=" + form.ticket_status.value +
             "&ticket_locktime=" + encodeURIComponent(form.ticket_locktime.value);
 			req.send(data);
 		}
@@ -342,6 +342,13 @@
 					<div class="col-sm-6">
 						<input type="text" class="form-control" name="ticket_status"
 							id="ticket_status" placeholder="请输入演出票状态">
+					</div>
+				</div>		
+				<div class="form-group">
+					<label class="col-sm-2 control-label">加锁时间</label>
+					<div class="col-sm-6">
+						<input type="text" class="form-control" name="ticket_locktime"
+							id="ticket_locktime" placeholder="请输入加锁时间">
 					</div>
 				</div>		
 				<div class="form-group">

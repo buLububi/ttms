@@ -2,7 +2,6 @@ package xupt.se.ttms.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Timestamp;
 import java.util.List;
 
 import jakarta.servlet.ServletException;
@@ -41,8 +40,7 @@ public class TicketServlet extends HttpServlet
             update(request, response);
         else if(type.equalsIgnoreCase("search"))
             search(request, response);
-        else if(type.equalsIgnoreCase("sale"))
-            sale(request, response);
+        
     }
 
     private void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -59,7 +57,7 @@ public class TicketServlet extends HttpServlet
         	double ticket_price=Double.valueOf(request.getParameter("ticket_price"));
         	int ticket_status = Integer.valueOf(request.getParameter("ticket_status"));
         	// Java 中没有 decimal 类型，如果 ticket_status 是小数，建议使用 float 或 double
-        	Timestamp ticket_locktime = Timestamp.valueOf(request.getParameter("ticket_locktime"));
+        	String ticket_locktime = request.getParameter("ticket_locktime");
 
         	// 假设 Ticket 类的构造函数接受的参数顺序与 Cus 类似
         	 stu = new Ticket(ticket_id, seat_id, sched_id, ticket_price, ticket_status, ticket_locktime);
@@ -111,7 +109,7 @@ public class TicketServlet extends HttpServlet
             int sched_id=Integer.valueOf(request.getParameter("sched_id"));
             double ticket_price=Double.valueOf(request.getParameter("ticket_price"));
             int ticket_status=Integer.valueOf(request.getParameter("ticket_status"));
-            Timestamp ticket_locktime=Timestamp.valueOf(request.getParameter("ticket_locktime"));
+            String ticket_locktime=request.getParameter("ticket_locktime");
             stu=new Ticket(ticket_id, seat_id, sched_id, ticket_price, ticket_status,ticket_locktime);
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();
@@ -174,10 +172,7 @@ public class TicketServlet extends HttpServlet
         }
         // System.out.print(jsonStr);
     }
-	private void sale(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
-		
-	}
+	
 	
 	
 	

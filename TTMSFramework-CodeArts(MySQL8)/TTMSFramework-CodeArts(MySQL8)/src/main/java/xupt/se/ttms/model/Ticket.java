@@ -1,6 +1,5 @@
 package xupt.se.ttms.model;
 
-import java.sql.Timestamp;
 
 public class Ticket {
 	private int ticket_id=0;
@@ -8,12 +7,12 @@ public class Ticket {
 	private int sched_id=0;
 	private double ticket_price=0.0;
 	private int ticket_status=0;
-	private Timestamp ticket_locktime;
+	private String ticket_locktime;
 	public Ticket() {
 		ticket_id=0;
 	}
 	public Ticket(int ticket_id, int seat_id, int sched_id, double ticket_price, int ticket_status,
-			Timestamp ticket_locktime) {
+			String ticket_locktime) {
 		super();
 		this.ticket_id = ticket_id;
 		this.seat_id = seat_id;
@@ -52,10 +51,10 @@ public class Ticket {
 	public void setTicket_status(int ticket_status) {
 		this.ticket_status = ticket_status;
 	}
-	public Timestamp getTicket_locktime() {
+	public String getTicket_locktime() {
 		return ticket_locktime;
 	}
-	public void setTicket_locktime(Timestamp ticket_locktime) {
+	public void setTicket_locktime(String ticket_locktime) {
 		this.ticket_locktime = ticket_locktime;
 	}
 	

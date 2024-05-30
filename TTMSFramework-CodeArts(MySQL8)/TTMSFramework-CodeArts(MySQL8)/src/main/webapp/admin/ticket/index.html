@@ -86,7 +86,7 @@
         row.insertCell(3).innerHTML = json[i].ticket_price;
         row.insertCell(4).innerHTML = json[i].ticket_status;
         row.insertCell(5).innerHTML = json[i].ticket_locktime;
-        var tmp =json[i].ticket_id + "," + json[i].seat_id + "," + json[i].sched_id + "," + json[i].ticket_price + "," + json[i].ticket_status + "," + json[i].ticket_locktime;
+        var tmp =json[i].ticket_id + "," + json[i].seat_id + "," + json[i].sched_id + "," + json[i].ticket_price + "," + json[i].ticket_status + ",\'" + json[i].ticket_locktime+"\'";
         row.insertCell(6).innerHTML = '<input type="button" class="btn btn-xs btn-primary" value="修改" onclick="modify('+ tmp +')" />&nbsp;&nbsp;<input type="button" class="btn btn-xs btn-danger" value="删除" onclick="del('+json[i].ticket_id+')" />';
       }
     }
@@ -94,14 +94,12 @@
 
   function modify(a, b, c, d, e, f) {
 	    // 对每个参数值使用 encodeURIComponent 进行编码
-	    window.location = "detail.html?"
-	        + "type=update"
-	        + "&ticket_id=" + encodeURIComponent(a)
-	        + "&seat_id=" + encodeURIComponent(b)
-	        + "&sched_id=" + encodeURIComponent(c)
-	        + "&ticket_price=" + encodeURIComponent(d)
-	        + "&ticket_status=" + encodeURIComponent(e)
-	        + "&ticket_locktime=" + encodeURIComponent(f);
+	    window.location = "detail.html?type=update&ticket_id="+a
+	        + "&seat_id="+b
+	        + "&sched_id="+c
+	        + "&ticket_price="+d
+	        + "&ticket_status="+e
+	        + "&ticket_locktime="+encodeURIComponent(f);
 	}
     
     
@@ -127,8 +125,11 @@
   }
    function delComplete() {
     if (req.readyState == 4 && req.status == 200) {
-      if(req.responseText==1)
-        search();
+      if(req.responseText==1){
+    	  alert("删除成功");
+    	  search();
+      }
+        
       else
         alert("数据删除失败，请重试");
     }
