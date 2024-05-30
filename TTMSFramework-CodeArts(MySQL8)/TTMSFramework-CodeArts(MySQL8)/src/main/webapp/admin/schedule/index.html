@@ -3,15 +3,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>橘子剧院管理系统-用户管理</title>
+<title>橘子影院管理系统-剧院管理</title>
 <link rel="stylesheet" href="../../css/bootstrap.min.css">
 <link rel="stylesheet" href="../../css/ace.min.css" />
 <link rel="stylesheet" href="../../css/font-awesome.min.css" />
 <script src="../../js/jquery-2.1.3.min.js"></script>
 <script src="../../js/bootstrap.min.js"></script>
-
 <style type="text/css">
-
 	/*设置链接文字颜色，取消下划线*/
 	a, a:hover, a:focus{
 	    color: #FFFFFF;
@@ -47,7 +45,7 @@
 	.nav>li>a:hover, .nav>li>a:focus {
 	    background-color: #CD853F;
 	}
-    body{
+	body{
         background-image: url(../../images/背景.jpg);
         background-attachment: fixed;
     }
@@ -55,7 +53,7 @@
 
 <script type="text/javascript">
     function search(){
-    var url = "../../CusServlet";
+    var url = "../../ScheduleServlet";
       if (window.XMLHttpRequest)
           req = new XMLHttpRequest();
       else if (window.ActiveXObject)
@@ -66,7 +64,7 @@
       //POST方式，必须加入如下头信息设定
       req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       req.onreadystatechange = searchComplete;
-      req.send("type=search&name="+document.getElementById("name").value);
+      req.send("type=search&studio_id="+document.getElementById("studioid").value);
     }
   }
 
@@ -82,29 +80,24 @@
       for(i=0; i<json.length; i++) {
         var rowCount = theTable.rows.length; //获得当前表格的行数
         var row = theTable.insertRow(rowCount);//在tale里动态的增加tr
-        row.insertCell(0).innerHTML = json[i].id;
-        row.insertCell(1).innerHTML = json[i].name;
-        row.insertCell(2).innerHTML = json[i].gender;
-        row.insertCell(3).innerHTML = json[i].telnum;
-        row.insertCell(4).innerHTML = json[i].email;
-		row.insertCell(5).innerHTML = json[i].uid;
-		row.insertCell(6).innerHTML = json[i].pwd;
-		row.insertCell(7).innerHTML = json[i].balance;
-		row.insertCell(8).innerHTML = json[i].paypwd;
-
-        var tmp = json[i].id + ",\'" + json[i].name + "\'," + json[i].gender + ",\'" + json[i].telnum + "\',\'" + json[i].email +"\',\'"+ json[i].uid + "\',\'" + json[i].pwd + "\'," + json[i].balance + ",\'" + json[i].paypwd + "\'";
-        row.insertCell(9).innerHTML = '<input type="button" class="btn btn-xs btn-primary" value="修改" onclick="modify('+ tmp +')" />&nbsp;&nbsp;<input type="button" class="btn btn-xs btn-danger" value="删除" onclick="del('+json[i].id+')" />';
+        row.insertCell(0).innerHTML = json[i].sched_id;
+        row.insertCell(1).innerHTML = json[i].studio_id;
+        row.insertCell(2).innerHTML = json[i].play_id;
+        row.insertCell(3).innerHTML = json[i].show_time;
+        row.insertCell(4).innerHTML = json[i].ticket_price;
+        var tmp = json[i].sched_id + "," + json[i].studio_id + "," +json[i].play_id +",\'" + json[i].show_time + "\'," + json[i].ticket_price ;
+        row.insertCell(5).innerHTML = '<input type="button" class="btn btn-xs btn-primary" value="修改" onclick="modify('+ tmp +')" />&nbsp;&nbsp;<input type="button" class="btn btn-xs btn-danger" value="删除" onclick="del('+json[i].sched_id+')" />';
       }
     }
   }
-  function modify(a,b,c,d,e,f,g,h,i){
-    window.location="detail.html?type=update&id="+a+"&name="+encodeURIComponent(b)+"&gender="+c+"&telnum="+encodeURIComponent(d)+"&email="+encodeURIComponent(e)+"&uid="+encodeURIComponent(f)+"&pwd="+encodeURIComponent(g)+"&balance="+h+"&paypwd="+encodeURIComponent(i);
+  function modify(a,b,c,d,e){
+    window.location="detail.html?type=update&sched_id="+a+"&studio_id="+b+"&play_id="+c+"&show_time="+encodeURIComponent(d)+"&ticket_price="+e;
   }
 
-  function del(id){
+  function del(sched_id){
     if(confirm("确定删除？")) {
 
-    var url = "../../CusServlet";
+    var url = "../../ScheduleServlet";
       if (window.XMLHttpRequest)
           req = new XMLHttpRequest();
       else if (window.ActiveXObject)
@@ -115,7 +108,7 @@
       //POST方式，必须加入如下头信息设定
       req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       req.onreadystatechange = delComplete;
-      req.send("type=delete&id="+id);
+      req.send("type=delete&sched_id="+sched_id);
     }
     }
   }
@@ -130,8 +123,8 @@
     function init(){
       search();
       //不同页面修改这里默认选中样式
-      $("#linkcus").css("background-color","#D2691E");
-      $("#sub2").attr("class","collapse panel-collapse in");
+      $("#linksched").css("background-color","#CD853F");
+      $("#sub1").attr("class","collapse panel-collapse in");
     }
 </script>
 </head>
@@ -145,7 +138,7 @@
       <div class="navbar-header pull-left">
         <a href="../../customer/index.html" class="navbar-brand">
           <small>
-            <span class="glyphicon glyphicon-film"></span>&nbsp;橘子剧院管理系统</small>
+            <span class="glyphicon glyphicon-film"></span>&nbsp;橘子影院管理系统</small>
         </a>
       </div>
       <!-- 右边个人设置 -->
@@ -187,7 +180,7 @@
 					<div class="panel-body">
 						<ul class="nav">
 							<li>
-								<a id="linkstudio" href="../studio/index.html" style="padding-left:30px;">
+								<a id="linkstudio" href="../studio/index.html" style="padding-left:30px">
 									<i class="fa fa-angle-right" aria-hidden="true"></i>演出厅管理
 								</a>
 							</li>
@@ -217,12 +210,12 @@
 					<div class="panel-body">
 						<ul class="nav">
 							<li>
-								<a id="linkcus" href="../customer/index.html" style="padding-left:30px;">
+								<a id="linkcustomer" href="../customer/index.html" style="padding-left:30px;">
 									<i class="fa fa-angle-right" aria-hidden="true"></i>观众管理
 								</a>
 							</li>
 							<li>
-								<a id="linkemployee" href="../employee/index.html" style="padding-left:30px">
+								<a id="linkemp" href="../employee/index.html" style="padding-left:30px;">
 									<i class="fa fa-angle-right" aria-hidden="true"></i>员工管理
 								</a>
 							</li>
@@ -231,7 +224,7 @@
 				</div>
 			</div>
 			<!-- 导航栏3 -->
-			<div class="panel panel-default">
+			<div class="panel panel-default">		
 				<!-- 加入data-toggle="collapse"后可点击折叠 -->
 				<div id="header3" class="panel-heading" data-toggle="collapse" data-target="#sub3" data-parent="#panelContainer">
 					<i class="glyphicon glyphicon-tasks"></i>
@@ -260,20 +253,20 @@
 					</div>
 				</div>
 			</div>
-
-
+			
+			
       </div>
     </div>
 
     <!--右侧主体部分-->
     <div class="col-md-9" style="margin-left:5px;">
-      <div style="margin:5px 0px 10px 0px;">用户管理 > 观众管理</div>
+      <div style="margin:5px 0px 10px 0px;">剧院管理 > 演出计划</div>
       <hr>
       <!-- 查询块 -->
       <div class="search">
         <form class="form-inline" name="myForm" action="#" method="post">
-          观众姓名:
-          <input type="text" class="form-control" id="name" name="name"/>&nbsp;&nbsp;
+          演出厅ID(输入0默认查询所有):
+          <input type="text" class="form-control" id="studioid" name="studioid"/>&nbsp;&nbsp;
           <input type="button" class="btn btn-primary" value="查   询" onclick="search()" />&nbsp;&nbsp;
           <input type="button" class="btn btn-danger"  value="增   加" onclick="javascript:window.location='detail.html?type=add'" />
         </form>
@@ -283,18 +276,14 @@
       <div>
         <table id="table" class="table table-bordered table-hover" style="text-align: center;margin-top:10px">
           <tr>
-            <th style="text-align: center;">观众编号</th>
-            <th style="text-align: center;">观众姓名</th>
-            <th style="text-align: center;">观众性别</th>
-            <th style="text-align: center;">观众电话</th>
-            <th style="text-align: center;">观众邮箱</th>
-			<th style="text-align: center;">uid</th>
-			<th style="text-align: center;">登录密码</th>
-			<th style="text-align: center;">账户余额</th>
-			<th style="text-align: center;">支付密码</th>
+            <th style="text-align: center;">演出计划ID</th>
+            <th style="text-align: center;">演出厅ID</th>
+            <th style="text-align: center;">剧目ID</th>
+            <th style="text-align: center;">演出时间</th>
+            <th style="text-align: center;">票价</th>
             <th style="text-align: center;">操作</th>
           </tr>
-		</table>
+        </table>
       </div>
 
     </div>

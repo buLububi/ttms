@@ -2,6 +2,7 @@ package xupt.se.ttms.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.List;
 
 import jakarta.servlet.ServletException;
@@ -14,11 +15,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import xupt.se.ttms.model.Cus;
-import xupt.se.ttms.service.CusSrv;
+import xupt.se.ttms.model.Ticket;
+import xupt.se.ttms.service.TicketSrv;
 
-@WebServlet("/CusServlet")
-public class CusServlet extends HttpServlet
+@WebServlet("/TicketServlet")
+public class TicketServlet extends HttpServlet
 {
     private static final long serialVersionUID=1L;
 
@@ -31,7 +32,7 @@ public class CusServlet extends HttpServlet
     {
         String type=request.getParameter("type");
 
-      //根据请求操作类型，执行相应的增、删、该、查
+        // 根据请求操作类型，执行相应的增、删、该、查
         if(type.equalsIgnoreCase("add"))
             add(request, response);
         else if(type.equalsIgnoreCase("delete"))
@@ -40,27 +41,33 @@ public class CusServlet extends HttpServlet
             update(request, response);
         else if(type.equalsIgnoreCase("search"))
             search(request, response);
+        else if(type.equalsIgnoreCase("sale"))
+            sale(request, response);
     }
 
     private void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        Cus cus=null;
-        int id=0;
+        Ticket stu=null;
+        int ticket_id=0;
         try
         {
-            String name=request.getParameter("name");
-            int gender=Integer.valueOf(request.getParameter("gender"));
-            String telnum=request.getParameter("telnum");
-            String email=request.getParameter("email");
-            String uid=request.getParameter("uid");
-            String pwd=request.getParameter("pwd");
-            int balance=Integer.valueOf(request.getParameter("balance"));
-            String paypwd=request.getParameter("paypwd");
-            cus=new Cus(id, name,gender, telnum, email, uid,pwd,balance,paypwd);
+        	
+        	int seat_id = Integer.valueOf(request.getParameter("seat_id"));
+        	int sched_id = Integer.valueOf(request.getParameter("sched_id"));
+        	// Java 中没有 smallint 类型，这里假设 ticket_price 是 float 或者 int
+        	// 如果 ticket_price 是来自数据库的 decimal 类型，建议使用 BigDecimal
+        	double ticket_price=Double.valueOf(request.getParameter("ticket_price"));
+        	int ticket_status = Integer.valueOf(request.getParameter("ticket_status"));
+        	// Java 中没有 decimal 类型，如果 ticket_status 是小数，建议使用 float 或 double
+        	Timestamp ticket_locktime = Timestamp.valueOf(request.getParameter("ticket_locktime"));
+
+        	// 假设 Ticket 类的构造函数接受的参数顺序与 Cus 类似
+        	 stu = new Ticket(ticket_id, seat_id, sched_id, ticket_price, ticket_status, ticket_locktime);
+        	
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();
 
-            if(new CusSrv().add(cus) == 1)
+            if(new TicketSrv().add(stu) == 1)
                 out.write("数据添加成功");
             else
                 out.write("数据添加失败，请重试");
@@ -79,10 +86,10 @@ public class CusServlet extends HttpServlet
     {
         try
         {
-            int id=Integer.valueOf(request.getParameter("id"));
+            int ticket_id=Integer.valueOf(request.getParameter("ticket_id"));
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();
-            out.write("" + new CusSrv().delete(id));
+            out.write("" + new TicketSrv().delete(ticket_id));
             out.close();
         }
         catch(Exception e)
@@ -95,24 +102,21 @@ public class CusServlet extends HttpServlet
 
     private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        Cus cus=null;
-        int id=0;
+        Ticket stu=null;
+        int ticket_id=0;
         try
         {
-            id=Integer.valueOf(request.getParameter("id"));
-            String name=request.getParameter("name");
-            int gender=Integer.valueOf(request.getParameter("gender"));
-            String telnum=request.getParameter("telnum");
-            String email=request.getParameter("email");
-            String uid=request.getParameter("uid");
-            String pwd=request.getParameter("pwd");
-            int balance=Integer.valueOf(request.getParameter("balance"));
-            String paypwd=request.getParameter("paypwd");
-            cus=new Cus(id, name,gender, telnum, email, uid,pwd,balance,paypwd);
+            ticket_id=Integer.valueOf(request.getParameter("ticket_id"));
+            int seat_id=Integer.valueOf(request.getParameter("seat_id"));
+            int sched_id=Integer.valueOf(request.getParameter("sched_id"));
+            double ticket_price=Double.valueOf(request.getParameter("ticket_price"));
+            int ticket_status=Integer.valueOf(request.getParameter("ticket_status"));
+            Timestamp ticket_locktime=Timestamp.valueOf(request.getParameter("ticket_locktime"));
+            stu=new Ticket(ticket_id, seat_id, sched_id, ticket_price, ticket_status,ticket_locktime);
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();
 
-            if(new CusSrv().modify(cus) == 1)
+            if(new TicketSrv().modify(stu) == 1)
                 out.write("数据修改成功");
             else
                 out.write("数据修改失败，请重试");
@@ -127,33 +131,33 @@ public class CusServlet extends HttpServlet
         }
     }
 
-    private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    
+
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         response.setCharacterEncoding("UTF-8");
         PrintWriter out=response.getWriter();
-        String name=request.getParameter("name");
-        List<Cus> result=null;
-        if(name != null && name.length() > 0)
-            result=new CusSrv().Fetch(name);
+        String sched=request.getParameter("sched_id");
+        
+        List<Ticket> result=null;
+        if(sched != null && sched.length() > 0)
+            result=new TicketSrv().Fetch(sched);
         else
-            result=new CusSrv().FetchAll();
+            result=new TicketSrv().FetchAll();
         String jsonStr="";
         try
         {
             JSONArray array=new JSONArray();
             JSONObject json;
-            for(Cus s : result)
+            for(Ticket s : result)
             {
                 json=new JSONObject();
-                json.put("id", s.getId());
-                json.put("name", s.getName());
-                json.put("gender", s.getGender());
-                json.put("telnum", s.getTelnum());
-                json.put("email", s.getEmail());
-                json.put("uid", s.getUid());
-                json.put("pwd", s.getPwd());
-                json.put("balance", s.getBalance());
-                json.put("paypwd", s.getPaypwd());
+                json.put("ticket_id", s.getTicket_id());
+                json.put("seat_id", s.getSeat_id());
+                json.put("sched_id", s.getSched_id());
+                json.put("ticket_price", s.getTicket_price());
+                json.put("ticket_status", s.getTicket_status());
+                json.put("ticket_locktime", s.getTicket_locktime());
                 array.put(json);
             }
             jsonStr=array.toString();
@@ -170,5 +174,11 @@ public class CusServlet extends HttpServlet
         }
         // System.out.print(jsonStr);
     }
-
+	private void sale(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		
+	}
+	
+	
+	
 }

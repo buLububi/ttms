@@ -14,11 +14,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import xupt.se.ttms.model.Cus;
-import xupt.se.ttms.service.CusSrv;
+import xupt.se.ttms.model.Sale;
+import xupt.se.ttms.service.SaleSrv;
 
-@WebServlet("/CusServlet")
-public class CusServlet extends HttpServlet
+@WebServlet("/SaleServlet")
+public class SaleServlet extends HttpServlet
 {
     private static final long serialVersionUID=1L;
 
@@ -31,7 +31,7 @@ public class CusServlet extends HttpServlet
     {
         String type=request.getParameter("type");
 
-      //鏍规嵁璇锋眰鎿嶄綔绫诲瀷锛屾墽琛岀浉搴旂殑澧炪�佸垹銆佽銆佹煡
+      //根据请求操作类型，执行相应的增、删、该、查
         if(type.equalsIgnoreCase("add"))
             add(request, response);
         else if(type.equalsIgnoreCase("delete"))
@@ -44,26 +44,26 @@ public class CusServlet extends HttpServlet
 
     private void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        Cus cus=null;
-        int id=0;
+        Sale sal=null;
+        int sale_ID=0;
         try
         {
-            String name=request.getParameter("name");
-            int gender=Integer.valueOf(request.getParameter("gender"));
-            String telnum=request.getParameter("telnum");
-            String email=request.getParameter("email");
-            String uid=request.getParameter("uid");
-            String pwd=request.getParameter("pwd");
-            int balance=Integer.valueOf(request.getParameter("balance"));
-            String paypwd=request.getParameter("paypwd");
-            cus=new Cus(id, name,gender, telnum, email, uid,pwd,balance,paypwd);
+        	int emp_id=Integer.valueOf(request.getParameter("emp_id"));
+        	int cus_id=Integer.valueOf(request.getParameter("cus_id"));
+            String sale_time=request.getParameter("sale_time");
+            double sale_payment=Double.valueOf(request.getParameter("sale_payment"));
+            double sale_change=Double.valueOf(request.getParameter("sale_change"));
+            int sale_type=Integer.valueOf(request.getParameter("sale_type"));
+            int sale_status=Integer.valueOf(request.getParameter("sale_status"));
+            int sale_sort=Integer.valueOf(request.getParameter("sale_sort"));
+            sal=new Sale(sale_ID, emp_id, cus_id, sale_time, sale_payment,sale_change,sale_type,sale_status,sale_sort);
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();
 
-            if(new CusSrv().add(cus) == 1)
-                out.write("鏁版嵁娣诲姞鎴愬姛");
+            if(new SaleSrv().add(sal) == 1)
+                out.write("数据添加成功");
             else
-                out.write("鏁版嵁娣诲姞澶辫触锛岃閲嶈瘯");
+                out.write("数据添加失败，请重试");
 
             out.close();
         }
@@ -71,7 +71,7 @@ public class CusServlet extends HttpServlet
         {
             e.printStackTrace();
             response.setContentType("text/html;charset=utf-8");
-            response.getWriter().write("鎿嶄綔閿欒锛岃閲嶈瘯");
+            response.getWriter().write("操作错误，请重试");
         }
     }
 
@@ -79,43 +79,43 @@ public class CusServlet extends HttpServlet
     {
         try
         {
-            int id=Integer.valueOf(request.getParameter("id"));
+            int sale_ID=Integer.valueOf(request.getParameter("sale_ID"));
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();
-            out.write("" + new CusSrv().delete(id));
+            out.write("" + new SaleSrv().delete(sale_ID));
             out.close();
         }
         catch(Exception e)
         {
             e.printStackTrace();
             response.setContentType("text/html;charset=utf-8");
-            response.getWriter().write("鎿嶄綔閿欒锛岃閲嶈瘯");
+            response.getWriter().write("操作错误，请重试");
         }
     }
 
     private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        Cus cus=null;
-        int id=0;
+        Sale sal=null;
+        int sale_ID=0;
         try
         {
-            id=Integer.valueOf(request.getParameter("id"));
-            String name=request.getParameter("name");
-            int gender=Integer.valueOf(request.getParameter("gender"));
-            String telnum=request.getParameter("telnum");
-            String email=request.getParameter("email");
-            String uid=request.getParameter("uid");
-            String pwd=request.getParameter("pwd");
-            int balance=Integer.valueOf(request.getParameter("balance"));
-            String paypwd=request.getParameter("paypwd");
-            cus=new Cus(id, name,gender, telnum, email, uid,pwd,balance,paypwd);
+        	sale_ID=Integer.valueOf(request.getParameter("sale_ID"));
+        	int emp_id=Integer.valueOf(request.getParameter("emp_id"));
+        	int cus_id=Integer.valueOf(request.getParameter("cus_id"));
+            String sale_time=request.getParameter("sale_time");
+            double sale_payment=Double.valueOf(request.getParameter("sale_payment"));
+            double sale_change=Double.valueOf(request.getParameter("sale_change"));
+            int sale_type=Integer.valueOf(request.getParameter("sale_type"));
+            int sale_status=Integer.valueOf(request.getParameter("sale_status"));
+        	int sale_sort=Integer.valueOf(request.getParameter("sale_sort"));
+            sal=new Sale(sale_ID, emp_id, cus_id, sale_time, sale_payment,sale_change,sale_type,sale_status,sale_sort);
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();
 
-            if(new CusSrv().modify(cus) == 1)
-                out.write("鏁版嵁淇敼鎴愬姛");
+            if(new SaleSrv().modify(sal) == 1)
+                out.write("数据修改成功");
             else
-                out.write("鏁版嵁淇敼澶辫触锛岃閲嶈瘯");
+                out.write("数据修改失败，请重试");
 
             out.close();
         }
@@ -123,37 +123,38 @@ public class CusServlet extends HttpServlet
         {
             e.printStackTrace();
             response.setContentType("text/html;charset=utf-8");
-            response.getWriter().write("鎿嶄綔閿欒锛岃閲嶈瘯");
+            response.getWriter().write("操作错误，请重试");
         }
     }
 
     private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+    	
         response.setCharacterEncoding("UTF-8");
         PrintWriter out=response.getWriter();
-        String name=request.getParameter("name");
-        List<Cus> result=null;
-        if(name != null && name.length() > 0)
-            result=new CusSrv().Fetch(name);
+        String cus_id=request.getParameter("cus_id");
+        List<Sale> result=null;
+        if(cus_id != null && cus_id.length() > 0)
+            result=new SaleSrv().Fetch(cus_id);
         else
-            result=new CusSrv().FetchAll();
+            result=new SaleSrv().FetchAll();
         String jsonStr="";
         try
         {
             JSONArray array=new JSONArray();
             JSONObject json;
-            for(Cus s : result)
+            for(Sale s : result)
             {
                 json=new JSONObject();
-                json.put("id", s.getId());
-                json.put("name", s.getName());
-                json.put("gender", s.getGender());
-                json.put("telnum", s.getTelnum());
-                json.put("email", s.getEmail());
-                json.put("uid", s.getUid());
-                json.put("pwd", s.getPwd());
-                json.put("balance", s.getBalance());
-                json.put("paypwd", s.getPaypwd());
+                json.put("sale_ID", s.getSaleId());
+                json.put("emp_id", s.getEmpId());
+                json.put("cus_id", s.getCusId());
+                json.put("sale_time", s.getTime());
+                json.put("sale_payment", s.getPayment());
+                json.put("sale_change", s.getChange());
+                json.put("sale_type", s.getType());
+                json.put("sale_status", s.getStatus());
+                json.put("sale_sort", s.getSort());
                 array.put(json);
             }
             jsonStr=array.toString();
@@ -168,7 +169,7 @@ public class CusServlet extends HttpServlet
             out.flush();
             out.close();
         }
-        // System.out.print(jsonStr);
+         System.out.print(jsonStr);
     }
 
 }
