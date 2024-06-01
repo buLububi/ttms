@@ -3,6 +3,7 @@ package xupt.se.ttms.idao;
 import xupt.se.ttms.dao.CusDAO;
 import xupt.se.ttms.dao.EmpDAO;
 import xupt.se.ttms.dao.PlayDAO;
+import xupt.se.ttms.dao.RoleDAO;
 import xupt.se.ttms.dao.SaleDAO;
 import xupt.se.ttms.dao.SaleScheDAO;
 import xupt.se.ttms.dao.ScheduleDAO;
@@ -94,6 +95,13 @@ private static iPlayDAO playDao;
 		if(null==saleItemDAO)
 			saleItemDAO=new saleItemDAO();
 		return saleItemDAO;
+	}
+	
+	private static iRoleDAO roleDAO;
+	public static iRoleDAO creatRoleDAO() {
+		if(null==roleDAO)
+			roleDAO=new RoleDAO();
+		return roleDAO;
 	}
 } 
  
