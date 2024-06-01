@@ -3,6 +3,7 @@ package xupt.se.ttms.idao;
 import xupt.se.ttms.dao.CusDAO;
 import xupt.se.ttms.dao.EmpDAO;
 import xupt.se.ttms.dao.PlayDAO;
+import xupt.se.ttms.dao.ResourceDAO;
 import xupt.se.ttms.dao.RoleDAO;
 import xupt.se.ttms.dao.SaleDAO;
 import xupt.se.ttms.dao.SaleScheDAO;
@@ -103,5 +104,13 @@ private static iPlayDAO playDao;
 			roleDAO=new RoleDAO();
 		return roleDAO;
 	}
+	
+	private static iResourceDAO resourceDAO;
+    public static synchronized iResourceDAO creatResourceDAO() 
+    {
+    	if(null == resourceDAO)
+    		resourceDAO=new ResourceDAO();
+    	return resourceDAO;
+    }
 } 
  
