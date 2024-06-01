@@ -9,6 +9,7 @@ import xupt.se.ttms.dao.ScheduleDAO;
 import xupt.se.ttms.dao.SeatDAO;
 import xupt.se.ttms.dao.StudioDAO;
 import xupt.se.ttms.dao.TicketDAO;
+import xupt.se.ttms.dao.saleItemDAO;
 
 public class DAOFactory
 {
@@ -87,5 +88,12 @@ private static iPlayDAO playDao;
     		saleScheDAO=new SaleScheDAO();
     	return saleScheDAO;
     }
+    
+    private static isaleItemDAO saleItemDAO;
+	public static isaleItemDAO creatSaleItemDAO() {
+		if(null==saleItemDAO)
+			saleItemDAO=new saleItemDAO();
+		return saleItemDAO;
+	}
 } 
  

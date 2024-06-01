@@ -52,7 +52,7 @@
 
 <script type="text/javascript">
     function search(){
-    var url = "../../TicketServlet";
+    var url = "../../saleItemServlet";
       if (window.XMLHttpRequest)
           req = new XMLHttpRequest();
       else if (window.ActiveXObject)
@@ -63,7 +63,7 @@
       //POST方式，必须加入如下头信息设定
       req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       req.onreadystatechange = searchComplete;
-      req.send("type=search&sched_id="+document.getElementById("sched_id").value);
+      req.send("type=search&ticket_id="+document.getElementById("ticket_id").value);
       
     }
   }
@@ -80,29 +80,30 @@
       for(i=0; i<json.length; i++) {
         var rowCount = theTable.rows.length; //获得当前表格的行数
         var row = theTable.insertRow(rowCount);//在tale里动态的增加tr
-        row.insertCell(0).innerHTML = json[i].ticket_id;
-        row.insertCell(1).innerHTML = json[i].seat_id;
-        row.insertCell(2).innerHTML = json[i].sched_id;
-        row.insertCell(3).innerHTML = json[i].ticket_price;
-        row.insertCell(4).innerHTML = json[i].ticket_status;
-        row.insertCell(5).innerHTML = json[i].ticket_locktime;
-        var tmp =json[i].ticket_id + "," + json[i].seat_id + "," + json[i].sched_id + "," + json[i].ticket_price + "," + json[i].ticket_status + "," + json[i].ticket_locktime;
-        row.insertCell(6).innerHTML = '<input type="button" class="btn btn-xs btn-primary" value="修改" onclick="modify(\'+ tmp +\')" />&nbsp;&nbsp;<input type="button" class="btn btn-xs btn-danger" value="删除" onclick="del('+json[i].ticket_id+')" />';
+        row.insertCell(0).innerHTML = json[i].sale_item_id;
+        row.insertCell(1).innerHTML = json[i].ticket_id;
+        row.insertCell(2).innerHTML = json[i].sale_ID;
+        row.insertCell(3).innerHTML = json[i].sale_item_price;
+        
       }
     }
   }
 
-   function modify(a,b,c,d,e,f){
-	  window.location="detail.html?type=update&ticket_id="+a+"&seat_id="+b+"&sched_id="+c+"&ticket_price="+d+"&ticket_status="+e+"&ticket_locktime="+encodeURIComponent(f);
-   } 
+  function modify(a, b, c, d) {
+	    // 对每个参数值使用 encodeURIComponent 进行编码
+	    window.location = "detail.html?type=update&sale_item_id="+a
+	        + "&ticket_id="+b
+	        + "&sale_ID="+c
+	        + "&sale_item_price="+d;
+	}
     
     
    
 
-   function del(ticket_id){
+   function del(sale_item_id){
     if(confirm("确定删除？")) {
 
-    var url = "../../TicketServlet";
+    var url = "../../saleItemServlet";
       if (window.XMLHttpRequest)
           req = new XMLHttpRequest();
       else if (window.ActiveXObject)
@@ -113,14 +114,17 @@
         //POST方式，必须加入如下头信息设定
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         req.onreadystatechange = delComplete;
-        req.send("type=delete&ticket_id="+ticket_id);
+        req.send("type=delete&sale_item_id="+sale_item_id);
       }
     }
   }
    function delComplete() {
     if (req.readyState == 4 && req.status == 200) {
-      if(req.responseText==1)
-        search();
+      if(req.responseText==1){
+    	  alert("删除成功");
+    	  search();
+      }
+        
       else
         alert("数据删除失败，请重试");
     }
@@ -133,7 +137,7 @@
     function init(){
       search();
       //不同页面修改这里默认选中样式
-      $("#linkstat").css("background-color","#CD853F");
+      $("#linksaleitem").css("background-color","#CD853F");
       $("#sub3").attr("class","collapse panel-collapse in");
     }
 </script>
@@ -276,240 +280,24 @@
       <!-- 查询块 -->
       <div class="search">
         <form class="form-inline" name="myForm" action="#" method="post">
-          <!-- 演出计划:
-          <input type="text" class="form-control" id="sched_id" name="sched_id"/>&nbsp;&nbsp;
-          <input type="button" class="btn btn-primary" value="查   询" onclick="search()" />&nbsp;&nbsp; -->
-      <!-- 
-          <input type="button" class="btn btn-danger"  value="增   加" onclick="javascript:window.location='detail.html?type=add'" />
-      -->
+          销售查询（根据票编号查询）:
+          <input type="text" class="form-control" id="ticket_id" name="ticket_id"/>&nbsp;&nbsp;
+          <input type="button" class="btn btn-primary" value="查   询" onclick="search()" />&nbsp;&nbsp;
+      
+   
         </form>
+        <br>
       </div>
-      <br>
-      <!-- 销售信息显示-->
+
+      <!-- 票信息显示-->
       <div>
-        <p style="text-align: center;font-size: 16px;">5月销量总报表</p>
+      <p style="text-align: center;font-size: 16px;">销售报表</p>
         <table id="table" class="table table-bordered table-hover" style="text-align: center;margin-top:10px">
           <tr>
             <th style="text-align: center;">序号</th>
-            <th style="text-align: center;">剧目id</th>
-            <th style="text-align: center;">票价</th>
-            <th style="text-align: center;">售票数量</th>
+            <th style="text-align: center;">票编号</th>
+            <th style="text-align: center;">销售编号</th>
             <th style="text-align: center;">总收入</th>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>25</td>
-            <td>440</td>
-            <td>11000</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>2</td>
-            <td>30</td>
-            <td>380</td>
-            <td>11400</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>3</td>
-            <td>25</td>
-            <td>540</td>
-            <td>13500</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>4</td>
-            <td>25</td>
-            <td>370</td>
-            <td>9250</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>5</td>
-            <td>30</td>
-            <td>325</td>
-            <td>9750</td>
-          </tr>
-        </table>
-        <p style="text-align: center;font-size: 16px;">5月第一周销量报表</p>
-        <table id="table" class="table table-bordered table-hover" style="text-align: center;margin-top:10px">
-          <tr>
-            <th style="text-align: center;">序号</th>
-            <th style="text-align: center;">剧目id</th>
-            <th style="text-align: center;">票价</th>
-            <th style="text-align: center;">售票数量</th>
-            <th style="text-align: center;">总收入</th>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>25</td>
-            <td>150</td>
-            <td>3750</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>2</td>
-            <td>30</td>
-            <td>120</td>
-            <td>3600</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>3</td>
-            <td>25</td>
-            <td>170</td>
-            <td>4250</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>4</td>
-            <td>25</td>
-            <td>130</td>
-            <td>3250</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>5</td>
-            <td>30</td>
-            <td>110</td>
-            <td>3300</td>
-          </tr>
-        </table>
-        <p style="text-align: center;font-size: 16px;">5月第二周销量报表</p>
-        <table id="table" class="table table-bordered table-hover" style="text-align: center;margin-top:10px">
-          <tr>
-            <th style="text-align: center;">序号</th>
-            <th style="text-align: center;">剧目id</th>
-            <th style="text-align: center;">票价</th>
-            <th style="text-align: center;">售票数量</th>
-            <th style="text-align: center;">总收入</th>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>25</td>
-            <td>120</td>
-            <td>3000</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>2</td>
-            <td>30</td>
-            <td>105</td>
-            <td>3150</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>3</td>
-            <td>25</td>
-            <td>150</td>
-            <td>3750</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>4</td>
-            <td>25</td>
-            <td>105</td>
-            <td>2625</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>5</td>
-            <td>30</td>
-            <td>95</td>
-            <td>2850</td>
-          </tr>
-        </table>
-        <p style="text-align: center;font-size: 16px;">5月第三周销量报表</p>
-        <table id="table" class="table table-bordered table-hover" style="text-align: center;margin-top:10px">
-          <tr>
-            <th style="text-align: center;">序号</th>
-            <th style="text-align: center;">剧目id</th>
-            <th style="text-align: center;">票价</th>
-            <th style="text-align: center;">售票数量</th>
-            <th style="text-align: center;">总收入</th>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>25</td>
-            <td>100</td>
-            <td>2500</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>2</td>
-            <td>30</td>
-            <td>90</td>
-            <td>2700</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>3</td>
-            <td>25</td>
-            <td>120</td>
-            <td>3000</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>4</td>
-            <td>25</td>
-            <td>85</td>
-            <td>2125</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>5</td>
-            <td>30</td>
-            <td>70</td>
-            <td>2100</td>
-          </tr>
-        </table>
-        <p style="text-align: center;font-size: 16px;">5月第四周销量报表</p>
-        <table id="table" class="table table-bordered table-hover" style="text-align: center;margin-top:10px">
-          <tr>
-            <th style="text-align: center;">序号</th>
-            <th style="text-align: center;">剧目id</th>
-            <th style="text-align: center;">票价</th>
-            <th style="text-align: center;">售票数量</th>
-            <th style="text-align: center;">总收入</th>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>1</td>
-            <td>25</td>
-            <td>70</td>
-            <td>1750</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>2</td>
-            <td>30</td>
-            <td>65</td>
-            <td>1950</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>3</td>
-            <td>25</td>
-            <td>100</td>
-            <td>2500</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>4</td>
-            <td>25</td>
-            <td>50</td>
-            <td>1250</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>5</td>
-            <td>30</td>
-            <td>50</td>
-            <td>1500</td>
           </tr>
         </table>
       </div>
