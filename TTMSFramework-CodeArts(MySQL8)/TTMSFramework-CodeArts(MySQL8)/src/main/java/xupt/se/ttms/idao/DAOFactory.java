@@ -11,6 +11,7 @@ import xupt.se.ttms.dao.ScheduleDAO;
 import xupt.se.ttms.dao.SeatDAO;
 import xupt.se.ttms.dao.StudioDAO;
 import xupt.se.ttms.dao.TicketDAO;
+import xupt.se.ttms.dao.TicketMangDAO;
 import xupt.se.ttms.dao.saleItemDAO;
 
 public class DAOFactory
@@ -111,6 +112,14 @@ private static iPlayDAO playDao;
     	if(null == resourceDAO)
     		resourceDAO=new ResourceDAO();
     	return resourceDAO;
+    }
+    
+    private static iticketMangDAO tIticketMangDAO;
+    public static synchronized iticketMangDAO creatTicketMangDAO() 
+    {
+    	if(null == tIticketMangDAO)
+    		tIticketMangDAO=new TicketMangDAO();
+    	return tIticketMangDAO;
     }
 } 
  
