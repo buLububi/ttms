@@ -2,7 +2,6 @@ package xupt.se.ttms.idao;
 
 import java.util.List;
 
-import xupt.se.ttms.model.Ticket;
 import xupt.se.ttms.model.saleItem;
 
 public interface isaleItemDAO {

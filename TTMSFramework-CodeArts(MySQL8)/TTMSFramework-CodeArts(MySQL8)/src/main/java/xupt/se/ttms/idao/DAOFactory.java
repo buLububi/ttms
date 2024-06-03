@@ -13,6 +13,10 @@ import xupt.se.ttms.dao.StudioDAO;
 import xupt.se.ttms.dao.TicketDAO;
 import xupt.se.ttms.dao.TicketMangDAO;
 import xupt.se.ttms.dao.saleItemDAO;
+import xupt.se.ttms.model.caiCount;
+import xupt.se.ttms.dao.SaleCountDAO;
+import xupt.se.ttms.dao.CaiCountDAO;
+import xupt.se.ttms.dao.CheckTicketDAO;
 
 public class DAOFactory
 {
@@ -120,6 +124,30 @@ private static iPlayDAO playDao;
     	if(null == tIticketMangDAO)
     		tIticketMangDAO=new TicketMangDAO();
     	return tIticketMangDAO;
+    }
+    
+    private static iSaleCountDAO iSaleCountDAO;
+    public static synchronized iSaleCountDAO creatSaleCountDAO() 
+    {
+    	if(null == iSaleCountDAO)
+    		iSaleCountDAO=new SaleCountDAO();
+    	return iSaleCountDAO;
+    }
+    
+    private static iCaiCountDAO iCaiCountDAO;
+    public static synchronized iCaiCountDAO creatCaiCountDAO() 
+    {
+    	if(null == iCaiCountDAO)
+    		iCaiCountDAO=new CaiCountDAO();
+    	return iCaiCountDAO;
+    }
+    
+    private static iCheckTicketDAO iCheckTicketDAO;
+    public static synchronized iCheckTicketDAO creatCheckTicketDAO() 
+    {
+    	if(null == iCheckTicketDAO)
+    		iCheckTicketDAO=new CheckTicketDAO();
+    	return iCheckTicketDAO;
     }
 } 
  

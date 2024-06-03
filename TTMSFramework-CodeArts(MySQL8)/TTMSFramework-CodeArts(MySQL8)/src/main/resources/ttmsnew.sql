@@ -289,3 +289,70 @@ CREATE TABLE `usr_role`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+/*
+CREATE VIEW ticketMang AS
+SELECT
+  p.play_name,
+  SUM(si.sale_item_price) AS revenue_per_play
+FROM
+  sale s
+  JOIN sale_item si ON s.sale_ID = si.sale_ID
+  JOIN ticket t ON si.ticket_id = t.ticket_id
+  JOIN schedule sch ON t.sched_id = sch.sched_id
+  JOIN play p ON sch.play_id = p.play_id
+WHERE
+  s.sale_type = 1 AND s.sale_status = 1
+GROUP BY
+  p.play_name;
+
+CREATE VIEW employee_sales_performance AS
+SELECT e.emp_name, SUM(s.sale_payment) AS sales_performance
+FROM sale s
+JOIN employee e ON s.emp_id = e.emp_id
+WHERE s.sale_type = 1 AND s.sale_status = 1
+GROUP BY e.emp_id;
+
+CREATE VIEW play_revenue_by_type_and_language AS
+SELECT
+  d1.dict_value AS play_type,
+  d2.dict_value AS play_language,
+  SUM(si.sale_item_price) AS revenue_per_type_language
+FROM sale s
+JOIN sale_item si ON s.sale_ID = si.sale_ID
+JOIN ticket t ON si.ticket_id = t.ticket_id
+JOIN schedule sch ON t.sched_id = sch.sched_id
+JOIN play p ON sch.play_id = p.play_id
+LEFT JOIN data_dict d1 ON p.dict_type_id = d1.dict_id
+LEFT JOIN data_dict d2 ON p.dict_lang_id = d2.dict_id
+WHERE s.sale_type = 1 AND s.sale_status = 1
+GROUP BY d1.dict_value, d2.dict_value;
+
+drop view pending_tickets;
+-- 创建一个视图，显示所有已经卖出但尚未验票的票
+CREATE VIEW `pending_tickets` AS
+SELECT
+  t.`ticket_id`,
+  t.`seat_id`,
+  t.`sched_id`,
+  t.`ticket_price`,
+  se.`studio_id`,
+  se.`seat_row`,
+  se.`seat_column`,
+  p.`play_name`,
+  p.`play_length`,
+  sch.`sched_time`,
+  t.`ticket_status`
+FROM
+  `ticket` t
+JOIN
+  `seat` se ON t.`seat_id` = se.`seat_id`
+JOIN
+  `schedule` sch ON t.`sched_id` = sch.`sched_id`
+JOIN
+  `play` p ON sch.`play_id` = p.`play_id`
+WHERE
+  t.`ticket_status` = 9;
+*/
+

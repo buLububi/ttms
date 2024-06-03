@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/main/java/xupt/se/ttms/controller/CheckTicketServlet.java=UTF-8
 encoding//src/main/java/xupt/se/ttms/controller/CusServlet.java=UTF-8
 encoding//src/main/java/xupt/se/ttms/controller/PlayServlet.java=UTF-8
 encoding//src/main/java/xupt/se/ttms/controller/ResourceServlet.java=UTF-8
